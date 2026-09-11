@@ -1,0 +1,11 @@
+# ACME Corp Knowledge Catalog
+
+> Central repository for domain definitions, business logic, and engineering standards formatted in Open Knowledge Format (OKF).
+
+## Knowledge
+- [ACME Master Catalog](https://github.io): The root entry point for all open knowledge bundles.
+- [Change Ledger](https://github.io): A timeline of all additions, verification status changes, and deprecations.
+
+## Guidelines
+- All metadata blocks are written in strict YAML frontmatter.
+- Paths are stable. Do not hallucinate URLs outside of the `/docs/` tree.
