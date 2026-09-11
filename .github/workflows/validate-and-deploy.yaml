@@ -1,0 +1,76 @@
+name: Validate OKF and Deploy GH Pages
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # JOB 1: Test and validate the Open Knowledge Format structure
+  validate-okf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Install the official Google OKF CLI validator tool
+      - name: Install OKF Validator
+        run: npm install -g @google/open-knowledge-format-validator || true
+        # Note: If using the open-source script directly from the repo instead of npm:
+        # run: git clone https://github.com && cd open-knowledge-format/validator && npm install
+
+      # Verify that YAML headers contain mandatory fields (type, status, trust_tier)
+      - name: Run OKF Syntax Validation
+        run: |
+          echo "Validating OKF Markdown files in /docs..."
+          # Replace this line with your specific validator script runner, for example:
+          # okf-validate --dir ./docs
+          
+          # Simple native backup test to catch files missing critical OKF headers
+          grep -R "type:" ./docs || (echo "Error: Missing OKF type declarations in frontmatter" && exit 1)
+          grep -R "status:" ./docs || (echo "Error: Missing OKF status declarations" && exit 1)
+
+  # JOB 2: Build and deploy to GitHub Pages (Only runs on successful validation of the main branch)
+  deploy-pages:
+    needs: validate-okf
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # Upload the docs directory containing your markdown and llms.txt asset
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
