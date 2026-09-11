@@ -235,13 +235,13 @@
         }
 
         window.addEventListener('popstate', () => {
-            const targetFile = window.location.hash.replace('#', '') || 'docs/index.md';
+            const targetFile = window.location.hash.replace('#', '') || './index.md';
             loadNode(targetFile);
         });
 
         // Start appen
         initNetwork();
-        const initialFile = window.location.hash.replace('#', '') || 'docs/index.md';
+        const initialFile = window.location.hash.replace('#', '') || './index.md';
         loadNode(initialFile);
     </script>
 </body>
