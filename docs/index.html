@@ -168,7 +168,7 @@
                 connectedFiles.forEach(relPath => {
                     const absoluteUrl = new URL(relPath, window.location.href + (currentDir ? '/' + currentDir + '/' : '/'));
                     let cleanTarget = absoluteUrl.pathname.replace(window.location.pathname, '').replace(/^\//, '');
-                    if(!cleanTarget) cleanTarget = 'docs/index.md';
+                    if(!cleanTarget) cleanTarget = './index.md';
 
                     if (!nodes.get(cleanTarget)) {
                         nodes.add({
@@ -200,7 +200,7 @@
                         link.addEventListener('click', (e) => {
                             e.preventDefault();
                             const absoluteUrl = new URL(href, window.location.href + (currentDir ? '/' + currentDir + '/' : '/'));
-                            const cleanTarget = absoluteUrl.pathname.replace(window.location.pathname, '').replace(/^\//, '') || 'docs/index.md';
+                            const cleanTarget = absoluteUrl.pathname.replace(window.location.pathname, '').replace(/^\//, '') || './index.md';
                             window.history.pushState({ path: cleanTarget }, '', '#' + cleanTarget);
                             loadNode(cleanTarget);
                         });
