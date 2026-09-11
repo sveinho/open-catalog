@@ -51,7 +51,7 @@
     </div>
 
     <script>
-        const md = window.markdownit({ html: true, linkify: true });
+              const md = window.markdownit({ html: true, linkify: true });
         
         // Globale datasett for Vis.js slik at vi kan oppdatere dem dynamisk
         const nodes = new vis.DataSet([]);
@@ -82,7 +82,6 @@
                     const key = parts[0].trim();
                     const value = parts.slice(1).join(':').trim().replace(/^["']|["']$/g, '');
                     
-                    // Håndter enkle arrays som f.eks [tag1, tag2]
                     if (value.startsWith('[') && value.endsWith(']')) {
                         metadata[key] = value.slice(1, -1).split(',').map(s => s.trim());
                     } else {
@@ -239,7 +238,7 @@
             loadNode(targetFile);
         });
 
-        // Start appen
+        // Start appen fra roten med docs/index.md som startnode
         initNetwork();
         const initialFile = window.location.hash.replace('#', '') || 'docs/index.md';
         loadNode(initialFile);
